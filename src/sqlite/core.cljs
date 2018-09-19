@@ -109,7 +109,9 @@
 ;; Initializtion
 ;; ===============
 
-(defn init-db [db init-stmts]
+(defn init-db 
+([db init-stmts] (init-db init-stmts identity))
+([db init-stmts after-func]
   (let [cmds (mapv #(on-cmd db :run %) init-stmts)
-        executor (reduce serialize-wrapper identity cmds)]
-    (executor)))
+        executor (reduce serialize-wrapper after-func cmds)]
+    (executor))))
